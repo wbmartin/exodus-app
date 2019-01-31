@@ -1,0 +1,29 @@
+
+#Authentication (for use with poster)
+http://localhost:8000/auth
+{"username":"test","passwd":"passwd2"}
+
+
+
+
+
+###############
+{"note_body":"from the web"}
+
+
+
+
+
+http://localhost:8000/user/grant/684/1
+{"1":[ "LOGON", "SEL_NOTE" ], "csrf":"fa8"}
+
+
+
+
+
+http://localhost:8000/user/768/1
+{ "username":"hasrights",  "passwd":"hasrights",  "csrf": "ff2"}
+
+
+
+http://localhost:8000/notes/1/1

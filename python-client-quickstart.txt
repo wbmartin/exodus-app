@@ -1,0 +1,11 @@
+import pymongo
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import pprint
+client = MongoClient('localhost', 27017)
+db = client['notes_db']
+
+----------------Examples-----------------
+result = db.users.update_one({'_id':ObjectId('5a42cecc5b90408649c85b98')}, {'$set':{'username':'admin2'}},upsert=False)
+print(result.modified_count)
+pprint.pprint(db.users.find_one({}))

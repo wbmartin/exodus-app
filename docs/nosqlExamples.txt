@@ -1,0 +1,50 @@
+ if self.cfg.PERMIT_ANON_USER_CREATE:
+            try:
+                raw_json = req.stream.read()
+            except Exception as ex:
+                raise falcon.HTTPError(falcon.HTTP_400, 'Error AUTH-PUT-PARSE', ex.message)
+
+            try:
+                result = json.loads(raw_json.decode())
+                passwordhash = bcrypt.hashpw(str(result['passwd']).encode(), bcrypt.gensalt())
+                """if bcrypt.hashpw(password, hashed) == hashed:
+                    print("It Matches!")   """
+#TODO Need to check if user is already present
+#TODO Need to sanitize input
+                sid = self.nosql_db.users.insert_one({
+                    'username':result['username'],
+                    'password':passwordhash
+                    })
+                #resp.body= sid
+                resp.status = falcon.HTTP_OK
+            except ValueError:
+                raise falcon.HTTPError(falcon.HTTP_400,
+                                       'Invalid JSON',
+                                       'Could not decode the request body - Incorect JSON.')
+        else:
+            resp.body = "Access Denied"
+            resp.status = falcon.HTTP_FORBIDDEN
+            
+            
+ ==================================
+   sid = self.nosql_db.users.insert_one({
+                    'username':result['username'],
+                    'password':passwordhash
+                    })
+                    
+ ====================================
+ db_user = self.nosql_db.users.find_one({"username": result['username']})
+ =====================================
+ from pymongo import MongoClient
+import bcrypt
+client = MongoClient('mongodb://localhost:27017/')
+db = client["notes_db"]
+
+dbUserObject = db.users.find_one({"username":"test"})
+print (dbUserObject['password'])
+
+hashedPwdFromDB = dbUserObject['password']
+if (bcrypt.hashpw(str("passwd2").encode(), hashedPwdFromDB) == hashedPwdFromDB):
+    print("match")        
+else:
+    print("miss")

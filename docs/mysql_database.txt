@@ -1,0 +1,78 @@
+
+DROP Table `t_users`;
+CREATE TABLE `t_users` (
+  `t_user_id` mediumint NOT NULL auto_increment,
+  `context_id` mediumint,
+  `username` varchar(45) DEFAULT NULL UNIQUE,
+  `passwd_hash` varchar(150) DEFAULT NULL,
+  `enabled` varchar(45) DEFAULT NULL,
+  `user_grants` varchar(350) DEFAULT NULL,
+  create_user_id mediumint,
+  create_dt timestamp DEFAULT CURRENT_TIMESTAMP,
+  update_user_id mediumint, 
+  update_dt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`t_users_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 
+update t_users set user_grants='{"1":["LOGON"]}';
+
+
+
+DROP Table t_group_grants;
+create table t_group_grants (
+	t_group_grant_id mediumint not null auto_increment, 
+	context_id mediumint,
+	group_name varchar(25), 
+	group_grants varchar(350),
+	create_user_id mediumint,
+	create_dt timestamp DEFAULT CURRENT_TIMESTAMP,
+	update_user_id mediumint, 
+	update_dt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	primary key(t_group_grant_id) 
+);
+insert into t_group_grants(group_name, group_grants) values('ADMIN','["LOGON","GET_NOTES"]')
+update t_group_grants set group_grants = '{"1":["LOGON","SEL_NOTE","UPD_NOTE","INS_NOTE", "DEL_NOTE", "INS_USER", "SEL_USER", "UPD_USER", "DEL_USER"]}' where group_name= 'ADMIN';
+
+DROP TABLE t_group_members;
+create table t_group_members (
+	t_group_member_id mediumint not null auto_increment,
+	context_id mediumint,
+	group_grant_id mediumint, 
+	user_id mediumint,
+	create_user_id mediumint,
+	create_dt timestamp DEFAULT CURRENT_TIMESTAMP,
+	update_user_id mediumint, 
+	update_dt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	primary key(t_group_member_id) 
+);
+insert into t_group_members (group_grant_id,user_id) values (1,1);
+
+
+SELECT t_group_grants.t_group_grant_id, t_group_grants.group_name, t_group_grants.group_grants, t_group_members.t_group_member_id, t_group_members.group_grant_id, t_group_members.user_id 
+FROM t_group_grants, t_group_members
+WHERE t_group_grants.t_group_grant_id =  AND t_group_members.user_id = 0
+
+DROP TABLE T_NOTES;
+DROP table t_notes (
+	t_note_id mediumint not null auto_increment,
+	context_id mediumint,
+	note_body varchar(300),
+	create_user_id mediumint,
+	create_dt timestamp DEFAULT CURRENT_TIMESTAMP,
+	update_user_id mediumint, 
+	update_dt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+	primary key(t_note_id) 
+);
+insert into t_notes(note_body,create_user_id, update_user_id) values('First Note',0,0);
+update t_notes set create_user_id=0, update_user_id =0;
+
+DROP TABLE T_CONTEXT
+create table t_context(
+	t_context_id mediumint not null auto_increment,
+	context_name varchar(300),
+	create_user_id mediumint,
+	create_dt timestamp DEFAULT CURRENT_TIMESTAMP,
+	update_user_id mediumint, 
+	update_dt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+	primary key(t_context_id) 
+);
+insert into t_context(context_name, create_user_id, update_user_id) values ('Default Context',0,0);

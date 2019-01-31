@@ -1,0 +1,2 @@
+#!/bin/sh
+pylint  --disable=I,R --reports=n --rcfile=pylint.rc genesis/*.py

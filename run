@@ -1,0 +1,2 @@
+#!/bin/bash
+python3.6 /home/app_svc_acct/genesis-app
